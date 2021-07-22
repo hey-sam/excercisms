@@ -3,20 +3,25 @@
 /*
 * Determine whether a string is an isogram or not
 **/
-function isIsogram(String $input = '')
+function isIsogram(String $input = '') :Bool
 {
 	if (empty($input))
+	{
 		return FALSE;
+	}
 
-	// Remove ilegal chars
+	// Remove illegal chars
 	$input = str_replace(array('-', ' '), '', $input);
 
-	// Split string, with each chr into array elm
 	if ((float) phpversion() > 7.4)
+	{
 		$input_arr = mb_str_split(mb_strtolower($input));
+	}
 	// Older PHP versions, didn't have multibyte string split
 	else
+	{
 		$input_arr = custom_mb_str_split(mb_strtolower($input));
+	}
 
 	$input_arr_value_counts = array_count_values($input_arr);
 
