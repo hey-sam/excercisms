@@ -1,7 +1,8 @@
 <?php
 /**
  * Class Robot
- * Generates a random & unique name/identifier in the format Alpha-Alpha-Num-Num-Num
+ * Generates a random & unique name/identifier.
+ * Identifier consists of the letters followed by 3 numbers, e.g. AA999
  *
  * @package		Exercism PHP track
  * @author		hey-sam
@@ -12,7 +13,16 @@ class Robot
 	private $name = NULL;
 	private $used_names = [];
 
-	public function getName() : string
+	public function __construct()
+	{
+		// Making use of a superglobal in lieu of a member variable of the parent class
+		$GLOBALS['used_names'] = empty($GLOBALS['used_names']) 
+			? []
+			: $GLOBALS['used_names'];
+		$this->used_names = &$GLOBALS['used_names'];
+	}
+
+	public function getName($aaa = 0) : string
 	{
 		$this->name = $this->name ?? $this->generateName();
 		return $this->name;
@@ -25,16 +35,13 @@ class Robot
 
 	private function generateName() :  string
 	{
-		// $i = 0;
 		do 
 		{
 			$ran_string = randString(2);
-			$ran_num = rand(100, 999);
+			$ran_num = random_int(100, 999);
 
 			$rand_name = $ran_string . $ran_num;
-			// echo $rand_name . '; Loop: ' . (int) (in_array($rand_name, $this->used_names)) . PHP_EOL;
-			// $i++;
-		} while (in_array($rand_name, $this->used_names));// && $i < 5);
+		} while (in_array($rand_name, $this->used_names));
 		
 		$this->used_names[] = $rand_name;
 
@@ -45,10 +52,9 @@ class Robot
 // Helper function
 if (!function_exists('randString'))
 {
-    function randString(Int $str_length = 2) : string
+    function randString(int $str_length = 2) : string
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	    
 	    $characters_arr = str_split($characters);
 	    shuffle($characters_arr);
 
@@ -57,6 +63,3 @@ if (!function_exists('randString'))
 	    return implode('', $characters_arr);
     }
 }
-
-// $robot = new Robot();
-// echo $robot->getName() . PHP_EOL;
